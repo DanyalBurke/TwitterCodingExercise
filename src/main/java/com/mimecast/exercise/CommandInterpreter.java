@@ -1,8 +1,9 @@
 package com.mimecast.exercise;
 
-import java.util.regex.Matcher;
+import static java.util.Arrays.asList;
+
+import java.util.List;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class CommandInterpreter {
     private static final Pattern POST_COMMAND = Pattern.compile("(?i)([A-Z0-9_]+)\\s->\\s(.*)");
@@ -10,30 +11,24 @@ public class CommandInterpreter {
 
     private final UserRepository userRepository;
 
+    private final List<Command> commandPatterns;
+
     public CommandInterpreter(UserRepository userRepository) {
         this.userRepository = userRepository;
+        commandPatterns = asList(
+                new PostCommand(userRepository),
+                new ReadCommand(userRepository)
+        );
     }
 
-    public String command(String command) {
-        Matcher postMatcher = POST_COMMAND.matcher(command);
-        Matcher nameMatcher = NAME_COMMAND.matcher(command);
-        if(postMatcher.matches()) {
-            String name = postMatcher.group(1);
-            String message = postMatcher.group(2);
+    public String command(String input) {
+        Command command =
+                commandPatterns.stream()
+                    .filter(pattern -> pattern.matches(input))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid command"));
 
-            userRepository.get(name).post(message);
-            return "";
-        }
-        else if (nameMatcher.matches()) {
-            String name = nameMatcher.group(1);
-            return userRepository.get(name)
-                    .messages()
-                    .stream()
-                    .map(msg -> msg.toString() + "\n")
-                    .collect(Collectors.joining(""));
-        }
-        else {
-            throw new IllegalArgumentException("Invalid command");
-        }
+        return command.execute(input);
     }
+
 }
