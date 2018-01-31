@@ -1,7 +1,8 @@
-package com.mimecast.exercise;
+package com.mimecast.exercise.commands;
 
 import static java.util.Arrays.asList;
 
+import com.mimecast.exercise.users.UserRepository;
 import java.util.List;
 import java.util.regex.Pattern;
 

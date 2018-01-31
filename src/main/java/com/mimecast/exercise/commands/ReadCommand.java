@@ -1,5 +1,6 @@
-package com.mimecast.exercise;
+package com.mimecast.exercise.commands;
 
+import com.mimecast.exercise.users.UserRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 

@@ -1,8 +1,8 @@
-package com.mimecast.exercise;
+package com.mimecast.exercise.users;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-class UserRepository {
+public class UserRepository {
     private ConcurrentHashMap<String, User> users = new ConcurrentHashMap<String, User>();
 
     public User get(String name) {

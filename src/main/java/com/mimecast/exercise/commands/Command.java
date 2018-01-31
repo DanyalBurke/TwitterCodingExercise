@@ -1,4 +1,4 @@
-package com.mimecast.exercise;
+package com.mimecast.exercise.commands;
 
 import java.util.List;
 import java.util.regex.Matcher;

@@ -1,9 +1,9 @@
-package com.mimecast.exercise;
+package com.mimecast.exercise.users;
 
 import java.util.ArrayList;
 import java.util.List;
 
-class User {
+public class User {
     private final List<Message> messages = new ArrayList<Message>();
 
     public User(String newName) {

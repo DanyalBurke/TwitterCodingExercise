@@ -1,6 +1,6 @@
-package com.mimecast.exercise;
+package com.mimecast.exercise.users;
 
-class Message {
+public class Message {
     private final String message;
 
     public Message(String message) {

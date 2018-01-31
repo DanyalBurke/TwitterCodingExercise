@@ -2,7 +2,8 @@ package com.mimecast.exercise;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Before;
+import com.mimecast.exercise.commands.CommandInterpreter;
+import com.mimecast.exercise.users.UserRepository;
 import org.junit.Test;
 
 public class CommandInterpreterTest {
