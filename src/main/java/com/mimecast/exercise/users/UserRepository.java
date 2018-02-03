@@ -3,9 +3,14 @@ package com.mimecast.exercise.users;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class UserRepository {
-    private ConcurrentHashMap<String, User> users = new ConcurrentHashMap<String, User>();
+    private final MessageFactory messageFactory;
+    private final ConcurrentHashMap<String, User> users = new ConcurrentHashMap<String, User>();
+
+    public UserRepository(MessageFactory messageFactory) {
+        this.messageFactory = messageFactory;
+    }
 
     public User get(String name) {
-        return users.computeIfAbsent(name, newName -> new User(newName));
+        return users.computeIfAbsent(name, newName -> new User(messageFactory, newName));
     }
 }
