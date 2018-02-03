@@ -3,6 +3,7 @@ package com.mimecast.exercise.users;
 import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
@@ -33,10 +34,13 @@ public class User {
     }
 
     public List<Message> wallMessages() {
-        // TODO: Fix stability issue with using sorted.
-        return Stream.concat(messages.stream(), follows.stream().flatMap(user -> user.messages().stream()))
-                .sorted()
-                .collect(toList());
+       List<Message> wallMessages =
+               Stream.concat(messages.stream(), follows.stream()
+                       .flatMap(user -> user.messages().stream()))
+                       .collect(toList());
+       // Sort using Collections sort to guarantee stability
+       Collections.sort(wallMessages);
+       return wallMessages;
     }
 
     @Override

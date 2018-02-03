@@ -4,15 +4,12 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.mimecast.exercise.commands.CommandInterpreter;
 import com.mimecast.exercise.users.MessageFactory;
 import com.mimecast.exercise.users.UserRepository;
 import java.time.Clock;
 import java.time.Instant;
-import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 
 public class CommandInterpreterTest {
     private Clock clock = mock(Clock.class);
