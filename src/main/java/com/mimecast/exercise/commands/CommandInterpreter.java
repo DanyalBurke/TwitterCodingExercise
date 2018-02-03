@@ -17,6 +17,7 @@ public class CommandInterpreter {
     public CommandInterpreter(UserRepository userRepository) {
         this.userRepository = userRepository;
         commandPatterns = asList(
+                new HelpCommand(),
                 new PostCommand(userRepository),
                 new ReadCommand(userRepository),
                 new WallCommand(userRepository),
@@ -29,7 +30,7 @@ public class CommandInterpreter {
                 commandPatterns.stream()
                     .filter(pattern -> pattern.matches(input))
                     .findFirst()
-                    .orElseThrow(() -> new IllegalArgumentException("Invalid command: " + input));
+                    .orElseThrow(() -> new InvalidCommandException(input));
 
         return command.execute(input);
     }

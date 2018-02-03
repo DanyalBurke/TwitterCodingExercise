@@ -26,7 +26,7 @@ public class User {
     }
 
     public List<Message> messages() {
-        return messages;
+        return stableSort(messages);
     }
 
     public void follow(User user) {
@@ -34,13 +34,15 @@ public class User {
     }
 
     public List<Message> wallMessages() {
-       List<Message> wallMessages =
-               Stream.concat(messages.stream(), follows.stream()
-                       .flatMap(user -> user.messages().stream()))
-                       .collect(toList());
-       // Sort using Collections sort to guarantee stability
-       Collections.sort(wallMessages);
-       return wallMessages;
+       return stableSort(Stream.concat(messages.stream(), follows.stream()
+                               .flatMap(user -> user.messages().stream()))
+                               .collect(toList()));
+    }
+
+    private <T extends Comparable<T>> List<T> stableSort(List<T> items) {
+        List<T> sorted = new ArrayList<>(items);
+        Collections.sort(sorted);
+        return sorted;
     }
 
     @Override

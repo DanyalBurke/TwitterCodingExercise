@@ -8,7 +8,7 @@ class WallCommand extends Command {
     private final UserRepository userRepository;
 
     public WallCommand(UserRepository userRepository) {
-        super("(?i)([A-Z0-9_]+) wall");
+        super("(?i)\\s*([A-Z0-9_]+)\\s+wall\\s*");
         this.userRepository = userRepository;
     }
     @Override

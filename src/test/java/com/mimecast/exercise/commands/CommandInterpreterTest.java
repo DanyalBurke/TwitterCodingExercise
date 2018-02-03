@@ -37,7 +37,7 @@ public class CommandInterpreterTest {
 
         assertEquals("", interpreter.command("Bob -> Damn! We lost!"));
         assertEquals("", interpreter.command("Bob -> Good game though."));
-        assertEquals("Damn! We lost!\nGood game though.\n", interpreter.command("Bob"));
+        assertEquals("Good game though.\nDamn! We lost!\n", interpreter.command("Bob"));
     }
 
     @Test
@@ -67,6 +67,10 @@ public class CommandInterpreterTest {
                 "Rita - I love the weather today\n",
                 interpreter.command("Sue wall"));
     }
+
+    // chronological for messages as well
+
+    // invalid command test
 
     // name_is_case_insensitive()
 

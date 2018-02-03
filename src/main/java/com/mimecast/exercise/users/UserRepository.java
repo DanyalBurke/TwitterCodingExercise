@@ -11,6 +11,6 @@ public class UserRepository {
     }
 
     public User get(String name) {
-        return users.computeIfAbsent(name, newName -> new User(messageFactory, newName));
+        return users.computeIfAbsent(name.toLowerCase(), newName -> new User(messageFactory, name));
     }
 }

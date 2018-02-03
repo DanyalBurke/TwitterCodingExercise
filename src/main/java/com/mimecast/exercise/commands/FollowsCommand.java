@@ -7,7 +7,7 @@ public class FollowsCommand extends Command {
     private final UserRepository userRepository;
 
     public FollowsCommand(UserRepository userRepository) {
-        super("(?i)([A-Z0-9_]+)\\sfollows\\s([A-Z0-9_]+)");
+        super("(?i)\\s*([A-Z0-9_]+)\\s+follows\\s+([A-Z0-9_]+)\\s*");
         this.userRepository = userRepository;
     }
 

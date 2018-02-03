@@ -8,7 +8,7 @@ class ReadCommand extends Command {
     private final UserRepository userRepository;
 
     public ReadCommand(UserRepository userRepository) {
-        super("(?i)([A-Z0-9_]+)");
+        super("(?i)\\s*([A-Z0-9_]+)\\s*");
         this.userRepository = userRepository;
     }
     @Override
