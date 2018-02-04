@@ -4,6 +4,7 @@ import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -34,6 +35,29 @@ public class UserTest {
                 .thenReturn(start.plusSeconds(5));
     }
 
+    @Test
+    public void a_name_with_letters_and_numbers_or_underscores_is_valid() {
+        new User(messageFactory, "rita");
+        new User(messageFactory, "Rita");
+        new User(messageFactory, "Rita_09");
+    }
+
+    @Test
+    public void a_name_with_any_other_character_is_invalid() {
+        expectThrowsIAE(() -> new User(messageFactory, "$"));
+        expectThrowsIAE(() -> new User(messageFactory, " spaces "));
+        expectThrowsIAE(() -> new User(messageFactory, "firstname secondname"));
+    }
+
+    private void expectThrowsIAE(Runnable r) {
+        try {
+            r.run();
+            fail("Did not throw IllegalArgumentException");
+        }
+        catch(IllegalArgumentException e) {
+            // okay
+        }
+    }
 
     @Test
     public void two_users_are_equal_if_they_have_the_same_name() {

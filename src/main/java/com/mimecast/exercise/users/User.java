@@ -17,6 +17,10 @@ public class User {
     private final Set<User> follows = new LinkedHashSet<>();
 
     public User(MessageFactory messageFactory, String name) {
+        if (!name.matches("^(?i)[A-Z0-9_]+$")) {
+            throw new IllegalArgumentException("Name must only contain alphanumeric and underscore characters");
+        }
+
         this.messageFactory = messageFactory;
         this.name = name;
     }
