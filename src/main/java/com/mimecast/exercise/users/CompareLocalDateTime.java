@@ -8,7 +8,9 @@ import static java.time.temporal.ChronoUnit.SECONDS;
 
 import java.time.LocalDateTime;
 
-public class CompareLocalDateTime {
+public final class CompareLocalDateTime {
+    private CompareLocalDateTime() { }
+
     public static String describeTimeBetween(LocalDateTime former, LocalDateTime latter) {
         if(former.isAfter(latter)) {
             throw new IllegalArgumentException("former was after latter");

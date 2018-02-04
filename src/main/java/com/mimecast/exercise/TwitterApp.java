@@ -5,11 +5,24 @@ import com.mimecast.exercise.commands.InvalidCommandException;
 import com.mimecast.exercise.users.MessageFactory;
 import com.mimecast.exercise.users.MessageFormatter;
 import com.mimecast.exercise.users.UserRepository;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.nio.charset.Charset;
 import java.time.Clock;
-import java.util.Scanner;
 
 public class TwitterApp {
-    public static void main(String[] args) {
+    private final BufferedReader in;
+    private final PrintStream out;
+
+    public TwitterApp(Charset inputCharset, InputStream in, PrintStream out) {
+        this.in = new BufferedReader(new InputStreamReader(in, inputCharset));
+        this.out = out;
+    }
+
+    void run() throws IOException {
         MessageFactory factory = new MessageFactory(Clock.systemUTC());
         UserRepository repository = new UserRepository(factory);
         MessageFormatter messageFormatter = new MessageFormatter(Clock.systemUTC());
@@ -17,10 +30,9 @@ public class TwitterApp {
 
         print("Welcome to Mimecast Twitter App. Type help for commands\n");
 
-        Scanner scanner = new Scanner(System.in);
         print("> ");
-        while(scanner.hasNextLine()) {
-            String input = scanner.nextLine();
+        String input;
+        while((input = in.readLine()) != null) {
             try {
                 print(interpreter.command(input));
             }
@@ -31,8 +43,12 @@ public class TwitterApp {
         }
     }
 
-    public static void print(String message) {
-        System.out.print(message);
-        System.out.flush();
+    public void print(String message) {
+        out.print(message);
+        out.flush();
+    }
+
+    public static void main(String[] args) throws IOException {
+        new TwitterApp(Charset.defaultCharset(), System.in, System.out).run();
     }
 }

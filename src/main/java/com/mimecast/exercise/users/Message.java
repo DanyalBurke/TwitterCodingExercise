@@ -26,9 +26,4 @@ public class Message implements Comparable<Message> {
     public int compareTo(Message other) {
         return other.postTime().compareTo(this.postTime);
     }
-
-    @Override
-    public String toString() {
-        return "Message[" + postTime + "," + user + "," + message + "]";
-    }
 }
