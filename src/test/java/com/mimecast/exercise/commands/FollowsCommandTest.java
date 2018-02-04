@@ -34,6 +34,7 @@ public class FollowsCommandTest {
         assertFalse(followsCommand.matches("Rita"));
         assertFalse(followsCommand.matches("Rita -> m"));
         assertFalse(followsCommand.matches("Rita follows"));
+        assertFalse(followsCommand.matches("Rita follows Tim Brown"));
         assertFalse(followsCommand.matches("Rita says hello"));
     }
 }

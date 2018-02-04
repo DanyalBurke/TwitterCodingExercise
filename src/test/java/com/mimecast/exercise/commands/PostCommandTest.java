@@ -42,6 +42,7 @@ public class PostCommandTest {
 
         assertFalse(postCommand.matches("->"));
         assertFalse(postCommand.matches("Bob"));
+        assertFalse(postCommand.matches("Bob Marley -> message"));
         assertFalse(postCommand.matches("Bob follows Sue"));
         assertFalse(postCommand.matches("Bob wall"));
     }

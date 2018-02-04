@@ -39,6 +39,7 @@ public class WallCommandTest {
         assertTrue(wallCommand.matches("Rita wall"));
         assertTrue(wallCommand.matches("  Bob  wall  "));
 
+        assertFalse(wallCommand.matches("%Rita% wall"));
         assertFalse(wallCommand.matches("Bob follows Sue"));
         assertFalse(wallCommand.matches("Sue"));
         assertFalse(wallCommand.matches("Sue -> M"));

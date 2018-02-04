@@ -32,6 +32,7 @@ public class ReadCommandTest {
         assertTrue(readCommand.matches("Rita"));
         assertTrue(readCommand.matches("  Bob  "));
 
+        assertFalse(readCommand.matches("Rita Green"));
         assertFalse(readCommand.matches("Bob follows Sue"));
         assertFalse(readCommand.matches("Sue wall"));
         assertFalse(readCommand.matches("Sue -> M"));
