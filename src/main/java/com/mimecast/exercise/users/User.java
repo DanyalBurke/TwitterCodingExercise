@@ -32,7 +32,9 @@ public class User {
     }
 
     public void follow(User user) {
-        follows.add(user);
+        if(!equals(user)) {
+            follows.add(user);
+        }
     }
 
     public boolean isFollowing(User user) {

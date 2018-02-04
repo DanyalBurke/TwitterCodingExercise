@@ -1,3 +1,8 @@
+# Generated files and IDE files
+.idea
+target
+*.iml
+
 # Compiled class file
 *.class
 

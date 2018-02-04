@@ -94,6 +94,14 @@ public class UserTest {
     }
 
     @Test
+    public void a_user_following_his_or_herself_is_a_noop() {
+        User john = new User(messageFactory, "John");
+        john.follow(john);
+
+        assertFalse(john.isFollowing(john));
+    }
+
+    @Test
     public void when_a_user_follows_someone_they_see_that_someones_posts_on_their_wall() {
         User john = new User(messageFactory, "John");
         User rita = new User(messageFactory, "Rita");

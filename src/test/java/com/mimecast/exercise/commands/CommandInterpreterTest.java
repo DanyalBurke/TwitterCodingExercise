@@ -145,6 +145,18 @@ public class CommandInterpreterTest {
     }
 
     @Test
+    public void a_user_following_his_or_herself_is_a_no_op() {
+        assertEquals("", interpreter.command("Rita -> I love the weather today"));
+        tickOneSecond();
+
+        assertEquals("", interpreter.command("Rita follows Rita"));
+
+        assertEquals(
+                "Rita - I love the weather today (1 second ago)\n",
+                interpreter.command("Rita wall"));
+    }
+
+    @Test
     public void can_see_help() {
         assertEquals(HelpCommand.HELP_MESSAGE, interpreter.command("help"));
     }
