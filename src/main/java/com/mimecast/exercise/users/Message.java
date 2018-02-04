@@ -1,6 +1,5 @@
 package com.mimecast.exercise.users;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 
 public class Message implements Comparable<Message> {
@@ -8,7 +7,7 @@ public class Message implements Comparable<Message> {
     private final String user;
     private final String message;
 
-    public Message(LocalDateTime postTime, String user, String message) {
+    Message(LocalDateTime postTime, String user, String message) {
         this.postTime = postTime;
         this.user = user;
         this.message = message;
@@ -28,4 +27,8 @@ public class Message implements Comparable<Message> {
         return other.postTime().compareTo(this.postTime);
     }
 
+    @Override
+    public String toString() {
+        return "Message[" + postTime + "," + user + "," + message + "]";
+    }
 }

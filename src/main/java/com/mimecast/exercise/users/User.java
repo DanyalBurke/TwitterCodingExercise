@@ -21,6 +21,8 @@ public class User {
         this.name = name;
     }
 
+    public String name() { return name; }
+
     public void post(String message) {
         messages.add(messageFactory.create(name, message));
     }
@@ -31,6 +33,10 @@ public class User {
 
     public void follow(User user) {
         follows.add(user);
+    }
+
+    public boolean isFollowing(User user) {
+        return follows.contains(user);
     }
 
     public List<Message> wallMessages() {

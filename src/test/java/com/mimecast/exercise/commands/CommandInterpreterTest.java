@@ -13,55 +13,77 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class CommandInterpreterTest {
-    private Clock clock = mock(Clock.class);
+    private final Clock clock = mock(Clock.class);
 
-    private CommandInterpreter interpreter =
+    private final CommandInterpreter interpreter =
             new CommandInterpreter(
                     new UserRepository(new MessageFactory(clock)),
                     new MessageFormatter(clock)
             );
+
+    private Instant now = Instant.parse("2018-02-01T12:00:01.00Z");
 
     @Before
     public void setupClock() {
         when(clock.getZone()).thenReturn(Clock.systemUTC().getZone());
 
         Instant start = Instant.parse("2018-02-01T12:00:01.00Z");
-        when(clock.instant())
-                .thenReturn(start.plusSeconds(1))
-                .thenReturn(start.plusSeconds(2))
-                .thenReturn(start.plusSeconds(3))
-                .thenReturn(start.plusSeconds(4))
-                .thenReturn(start.plusSeconds(5));
+        when(clock.instant()).thenAnswer((invocation) -> now);
+    }
+
+    private void tickOneSecond() {
+        now = now.plusSeconds(1);
     }
 
     @Test
-    public void when_I_post_a_message_to_a_user_then_I_can_read_it_back() {
+    public void when_I_post_a_message_to_a_user_then_I_can_read_it_back_newest_first() {
         assertEquals("", interpreter.command("Rita -> I love the weather today"));
+        tickOneSecond();
+
         assertEquals("I love the weather today (1 second ago)\n", interpreter.command("Rita"));
 
         assertEquals("", interpreter.command("Bob -> Damn! We lost!"));
+        tickOneSecond();
+
         assertEquals("", interpreter.command("Bob -> Good game though."));
-        assertEquals("Good game though. (1 second ago)\n" +
-                "Damn! We lost! (2 seconds ago)\n", interpreter.command("Bob"));
+        tickOneSecond();
+
+        assertEquals(
+                "Good game though. (1 second ago)\n" +
+                "Damn! We lost! (2 seconds ago)\n",
+                interpreter.command("Bob"));
     }
 
     @Test
-    public void my_wall_shows_my_posts() {
+    public void my_wall_shows_my_posts_newest_first() {
         assertEquals("",
-                interpreter.command("Sue -> I'm in Bradford today! Anyone want to have a coffee?"));
+                interpreter.command("Bob -> Damn! We lost!"));
+        tickOneSecond();
 
-        assertEquals("Sue - I'm in Bradford today! Anyone want to have a coffee? (1 second ago)\n",
-                interpreter.command("Sue wall"));
+        assertEquals("",
+                interpreter.command("Bob -> Good game though."));
+        tickOneSecond();
+
+        assertEquals(
+                "Bob - Good game though. (1 second ago)\n" +
+                 "Bob - Damn! We lost! (2 seconds ago)\n" ,
+                interpreter.command("Bob wall"));
     }
 
     @Test
-    public void when_I_follow_someone_then_their_posts_show_up_in_my_wall_ordered_chronologically() {
-
+    public void when_I_follow_someone_then_their_posts_show_up_in_my_wall_newest_first() {
         assertEquals("", interpreter.command("Rita -> I love the weather today"));
+        tickOneSecond();
+
         assertEquals("",
                 interpreter.command("Sue -> I'm in Bradford today! Anyone want to have a coffee?"));
+        tickOneSecond();
+
         assertEquals("", interpreter.command("Bob -> Damn! We lost!"));
+        tickOneSecond();
+
         assertEquals("", interpreter.command("Bob -> Good game though."));
+        tickOneSecond();
 
         assertEquals("", interpreter.command("Sue follows Rita"));
         assertEquals("", interpreter.command("Sue follows Bob"));
@@ -73,21 +95,57 @@ public class CommandInterpreterTest {
                 interpreter.command("Sue wall"));
     }
 
-    // chronological for messages as well
+    @Test(expected = InvalidCommandException.class)
+    public void an_invalid_command_throws_InvalidCommandException() {
+        interpreter.command("->");
+    }
 
-    // invalid command test
+    @Test
+    public void names_are_case_insensitive_when_referred_to() {
+        assertEquals("",
+                interpreter.command("Rita -> I love the weather today"));
+        tickOneSecond();
 
-    // name_is_case_insensitive()
+        assertEquals(
+                "I love the weather today (1 second ago)\n",
+                interpreter.command("RITA"));
+    }
 
-    // whitespace_is_not_considered_except_in_message()
+    @Test
+    public void a_user_can_follow_another_user_twice_and_the_result_is_the_same() {
+        assertEquals("", interpreter.command("Sue follows Rita"));
+        assertEquals("", interpreter.command("Sue follows Rita"));
 
-    // mutliline support in a command?
+        assertEquals("", interpreter.command("Rita -> I love the weather today"));
+        tickOneSecond();
 
-    // what characters to support in a name?
+        assertEquals("Rita - I love the weather today (1 second ago)\n", interpreter.command("Sue wall"));
+    }
 
-    // what should it throw for an invalid command
+    @Test
+    public void two_user_can_follow_each_other() {
+        assertEquals("", interpreter.command("Sue follows Rita"));
+        assertEquals("", interpreter.command("Rita follows Sue"));
 
-    // follows twice
+        assertEquals("", interpreter.command("Rita -> I love the weather today"));
+        tickOneSecond();
 
-    // two people can follow each other
+        assertEquals("", interpreter.command("Sue -> I'm in Bradford today! Anyone want to have a coffee?"));
+        tickOneSecond();
+
+        assertEquals(
+                "Sue - I'm in Bradford today! Anyone want to have a coffee? (1 second ago)\n" +
+                "Rita - I love the weather today (2 seconds ago)\n",
+                interpreter.command("Sue wall"));
+
+        assertEquals(
+                "Sue - I'm in Bradford today! Anyone want to have a coffee? (1 second ago)\n" +
+                        "Rita - I love the weather today (2 seconds ago)\n",
+                interpreter.command("Rita wall"));
+    }
+
+    @Test
+    public void can_see_help() {
+        assertEquals(HelpCommand.HELP_MESSAGE, interpreter.command("help"));
+    }
 }

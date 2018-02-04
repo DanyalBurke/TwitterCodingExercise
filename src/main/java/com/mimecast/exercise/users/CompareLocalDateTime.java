@@ -5,10 +5,8 @@ import static java.time.temporal.ChronoUnit.DAYS;
 import static java.time.temporal.ChronoUnit.HOURS;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static java.time.temporal.ChronoUnit.SECONDS;
-import static java.util.Arrays.asList;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 
 public class CompareLocalDateTime {
     public static String describeTimeBetween(LocalDateTime former, LocalDateTime latter) {
@@ -36,6 +34,9 @@ public class CompareLocalDateTime {
     }
 
     private static String describe(long amount, String unit) {
-        return format("%d %s%s ago", amount, unit, (amount == 1 ? "" : "s"));
+        return format("%d %s%s ago",
+                amount,
+                unit,
+                amount == 1 ? "" : "s");
     }
 }
